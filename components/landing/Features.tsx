@@ -44,32 +44,25 @@ export default function Features() {
                 </div>
 
                 {/* 피처 카드 */}
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="flex flex-col gap-6">
                     {features.map((feature, index) => (
                         <div
                             key={feature.step}
-                            className="group relative bg-white rounded-2xl p-8 border border-secondary-200 hover:border-primary-200 hover:shadow-book transition-all duration-300"
-                            style={{ animationDelay: `${index * 100}ms` }}
+                            className="bg-white rounded-2xl p-6 border border-secondary-200 shadow-sm hover:shadow-md transition-all flex items-start gap-4"
                         >
-                            {/* 스텝 번호 */}
-                            <div className="absolute -top-4 left-8">
-                                <span className={`inline-flex items-center justify-center w-8 h-8 bg-gradient-to-r ${feature.color} text-white text-xs font-bold rounded-full`}>
-                                    {feature.step}
-                                </span>
-                            </div>
-
                             {/* 아이콘 */}
-                            <div className="text-4xl mb-6 mt-2">
+                            <div className="shrink-0 text-3xl">
                                 {feature.icon}
                             </div>
 
-                            {/* 콘텐츠 */}
-                            <h3 className="font-serif text-xl font-semibold text-foreground mb-3">
-                                {feature.title}
-                            </h3>
-                            <p className="text-foreground/60 leading-relaxed text-sm">
-                                {feature.description}
-                            </p>
+                            <div>
+                                <h3 className="font-serif text-lg font-bold text-gray-900 mb-1">
+                                    {feature.title}
+                                </h3>
+                                <p className="text-sm text-gray-600 leading-relaxed break-keep">
+                                    {feature.description}
+                                </p>
+                            </div>
                         </div>
                     ))}
                 </div>
