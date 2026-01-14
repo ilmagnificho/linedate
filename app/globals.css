@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+/* =============================================
+   DeckDrop - Custom CSS Styles
+   ============================================= */
+
+:root {
+  /* Primary Colors */
+  --color-primary-900: #102a43;
+  --color-primary-800: #243b53;
+  --color-primary-700: #334e68;
+  --color-primary-600: #486581;
+  --color-primary-500: #627d98;
+  --color-primary-100: #d9e2ec;
+  
+  /* Secondary Colors */
+  --color-secondary-300: #f5f0e8;
+  --color-secondary-200: #faf8f5;
+  --color-secondary-100: #fdfcfb;
+  
+  /* Accent Colors */
+  --color-accent-warm: #c9a87c;
+  --color-accent-coral: #e07a5f;
+  
+  /* Base */
+  --background: #fdfcfb;
+  --foreground: #102a43;
+  --surface: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-pretendard), system-ui, sans-serif;
+  --font-serif: var(--font-noto-serif), Georgia, serif;
+}
+
+/* Global Styles */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-accent-warm);
+  color: white;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-secondary-200);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-300);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-500);
+}
+
+/* Custom Utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Book Card Selection Animation */
+.book-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.book-card:hover {
+  transform: translateY(-4px);
+}
+
+.book-card[data-selected="true"] {
+  transform: scale(1.02);
+  box-shadow: 0 0 0 3px var(--color-primary-900);
+}
+
+/* Blur Transition for Profile Reveal */
+.blur-profile {
+  filter: blur(10px);
+  transition: filter 0.8s ease-out;
+}
+
+.blur-profile.revealed {
+  filter: blur(0);
+}
+
+/* Message Bubble */
+.message-bubble {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary-900), var(--color-primary-600));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
