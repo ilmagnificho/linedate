@@ -1,104 +1,73 @@
+'use client';
+
 import Link from 'next/link';
 
 export default function Hero() {
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-            {/* Background */}
-            <div className="absolute inset-0 bg-gradient-to-b from-secondary-100 via-secondary-200 to-background" />
+            {/* 배경 그라데이션 */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#fdf4f5] via-[#fefcfa] to-[#f5f0e3]" />
 
-            {/* Decorative Elements */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {/* Floating books decoration */}
-                <div className="absolute top-20 left-10 text-6xl opacity-10 animate-pulse">📚</div>
-                <div className="absolute top-40 right-20 text-5xl opacity-10 animate-pulse delay-100">📖</div>
-                <div className="absolute bottom-40 left-20 text-4xl opacity-10 animate-pulse delay-200">📕</div>
-                <div className="absolute bottom-20 right-10 text-5xl opacity-10 animate-pulse delay-300">📗</div>
-            </div>
+            {/* 장식 요소 */}
+            <div className="absolute top-20 left-10 w-32 h-32 bg-primary-200/30 rounded-full blur-3xl" />
+            <div className="absolute bottom-20 right-10 w-40 h-40 bg-accent-lavender/20 rounded-full blur-3xl" />
+            <div className="absolute top-1/3 right-1/4 w-24 h-24 bg-accent-peach/30 rounded-full blur-2xl" />
 
-            {/* Content */}
-            <div className="relative z-10 max-w-4xl mx-auto px-6 py-20 text-center">
-                {/* Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-card mb-8">
-                    <span className="text-lg">📚</span>
-                    <span className="text-sm font-medium text-primary-700">책으로 시작하는 인연</span>
+            <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+                {/* 배지 */}
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white rounded-full shadow-soft border border-primary-100 mb-8 animate-fade-in-up">
+                    <span className="text-lg">📖</span>
+                    <span className="text-sm font-medium text-primary-600">책으로 이어지는 인연</span>
                 </div>
 
-                {/* Main Headline */}
-                <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-primary-900 leading-tight mb-6">
-                    <span className="block">같은 문장에 밑줄 긋는 사람,</span>
-                    <span className="block mt-2 gradient-text">그게 운명 아닐까요?</span>
+                {/* 메인 헤드라인 */}
+                <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight mb-6">
+                    <span className="text-foreground">같은 문장에</span>
+                    <br />
+                    <span className="text-gradient">밑줄 긋는 사람</span>
+                    <span className="text-foreground">,</span>
+                    <br />
+                    <span className="text-foreground">그게 운명 아닐까요?</span>
                 </h1>
 
-                {/* Sub Copy */}
-                <p className="text-lg md:text-xl text-primary-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-                    스와이프는 3초, 책 한 권의 감동은 평생.<br />
-                    <span className="text-primary-800 font-medium">얼굴보다 취향이 먼저</span>인 블라인드 데이팅.
+                {/* 서브 헤드라인 */}
+                <p className="text-lg md:text-xl text-foreground/70 mb-10 max-w-2xl mx-auto leading-relaxed">
+                    외모가 아닌 책 취향으로 먼저 만나요.
+                    <br className="hidden md:block" />
+                    대화가 깊어질수록, 서로의 모습이 드러나요.
                 </p>
 
-                {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                {/* CTA 버튼 */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
                     <Link
                         href="/select"
-                        className="
-              inline-flex items-center gap-2 px-8 py-4
-              bg-primary-900 text-white rounded-full
-              font-medium text-lg
-              shadow-lg hover:shadow-xl
-              hover:bg-primary-800 
-              transition-all duration-300
-              hover:-translate-y-0.5
-            "
+                        className="btn-primary text-lg px-8 py-4"
                     >
-                        <span>내 취향의 사람 만나기</span>
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
+                        내 취향의 사람 만나기
                     </Link>
-
-                    <Link
-                        href="#how-it-works"
-                        className="
-              inline-flex items-center gap-2 px-6 py-3
-              text-primary-700 
-              font-medium
-              hover:text-primary-900
-              transition-colors duration-300
-            "
-                    >
+                    <button className="flex items-center gap-2 text-foreground/60 hover:text-primary-500 transition-colors group">
                         <span>어떻게 작동하나요?</span>
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
-                    </Link>
+                    </button>
                 </div>
 
-                {/* Trust Indicator */}
-                <div className="mt-16 pt-8 border-t border-secondary-300">
-                    <p className="text-sm text-primary-500 mb-3">같은 책을 읽은 사람과의 대화는 다릅니다</p>
-                    <div className="flex justify-center items-center gap-8 text-primary-400">
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-primary-700">20+</div>
-                            <div className="text-xs">엄선된 도서</div>
-                        </div>
-                        <div className="w-px h-8 bg-secondary-400" />
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-primary-700">5</div>
-                            <div className="text-xs">취향 카테고리</div>
-                        </div>
-                        <div className="w-px h-8 bg-secondary-400" />
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-primary-700">1:1</div>
-                            <div className="text-xs">블라인드 매칭</div>
-                        </div>
+                {/* 신뢰 지표 */}
+                <div className="flex flex-wrap justify-center gap-8 text-sm text-foreground/50">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xl">📚</span>
+                        <span>20+ 엄선된 도서</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="text-xl">💕</span>
+                        <span>5 취향 카테고리</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="text-xl">✨</span>
+                        <span>1:1 블라인드 매칭</span>
                     </div>
                 </div>
-            </div>
-
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-                <svg className="w-6 h-6 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
             </div>
         </section>
     );

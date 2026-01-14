@@ -1,182 +1,135 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import BookCard from '@/components/books/BookCard';
-import { Book, BOOK_CATEGORIES, BookCategory } from '@/types/database';
-import { CURATED_BOOKS, THIS_MONTH_BOOKS, SeedBook } from '@/lib/books';
-
-// Mock data - 실제로는 Supabase에서 가져옴
-const getMockBooks = (): Book[] => {
-    return CURATED_BOOKS
-        .filter(book => THIS_MONTH_BOOKS.includes(book.title))
-        .map((book, index) => ({
-            id: `book-${index + 1}`,
-            title: book.title,
-            author: book.author,
-            cover_url: book.cover_url,
-            description: book.description,
-            genre: book.genre,
-            category: book.category,
-            is_active: true,
-            month_year: '2026-01',
-            created_at: new Date().toISOString(),
-        }));
-};
+import Link from 'next/link';
+import { THIS_MONTH_BOOKS, getCategoryLabel, getCategoryEmoji } from '@/lib/books';
 
 export default function SelectPage() {
     const router = useRouter();
-    const [books, setBooks] = useState<Book[]>([]);
     const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        // Mock 데이터 로드 (실제로는 Supabase 쿼리)
-        const loadBooks = async () => {
-            setIsLoading(true);
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 500));
-            setBooks(getMockBooks());
-            setIsLoading(false);
-        };
-        loadBooks();
+        // 로딩 시뮬레이션
+        const timer = setTimeout(() => setIsLoading(false), 500);
+        return () => clearTimeout(timer);
     }, []);
 
-    const handleSelect = (bookId: string) => {
-        setSelectedBookId(bookId);
+    const handleConfirm = () => {
+        if (selectedBookId) {
+            router.push('/waiting');
+        }
     };
 
-    const handleSubmit = async () => {
-        if (!selectedBookId) return;
-
-        setIsSubmitting(true);
-
-        // TODO: Supabase에 선택 저장
-        // const { error } = await supabase.from('user_selections').insert({
-        //   user_id: userId,
-        //   book_id: selectedBookId,
-        //   month_year: '2026-01'
-        // });
-
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // 매칭 대기 화면으로 이동
-        router.push('/waiting');
+    const getCurrentMonth = () => {
+        const now = new Date();
+        return `${now.getFullYear()}년 ${now.getMonth() + 1}월의 책`;
     };
-
-    const selectedBook = books.find(b => b.id === selectedBookId);
 
     return (
-        <main className="min-h-screen bg-background">
-            {/* Header */}
-            <header className="sticky top-0 z-20 bg-background/80 backdrop-blur-md border-b border-secondary-300">
-                <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <span className="text-2xl">📚</span>
-                        <span className="font-serif text-xl font-bold text-primary-900">DeckDrop</span>
-                    </div>
-                    <div className="text-sm text-primary-500">
-                        2026년 1월의 책
-                    </div>
+        <main className="min-h-screen bg-[#fefcfa]">
+            {/* 헤더 */}
+            <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-secondary-200">
+                <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+                    <Link href="/" className="flex items-center gap-2">
+                        <span className="text-xl">📖</span>
+                        <span className="font-serif font-semibold text-foreground">Linedate</span>
+                    </Link>
+                    <span className="text-sm text-foreground/50">{getCurrentMonth()}</span>
                 </div>
             </header>
 
-            <div className="max-w-6xl mx-auto px-6 py-12">
-                {/* Title Section */}
+            {/* 메인 콘텐츠 */}
+            <div className="max-w-4xl mx-auto px-6 py-12">
+                {/* 타이틀 */}
                 <div className="text-center mb-12">
-                    <span className="inline-block px-4 py-1.5 bg-accent-warm/20 text-accent-warm rounded-full text-sm font-medium mb-4">
-                        이달의 책 선택
-                    </span>
-                    <h1 className="font-serif text-3xl md:text-4xl font-bold text-primary-900 mb-4">
+                    <h1 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-4">
                         어떤 책으로 인연을 시작할까요?
                     </h1>
-                    <p className="text-primary-600 max-w-lg mx-auto">
-                        4권 중 1권을 선택하면, 같은 책을 선택한 사람과 매칭됩니다.<br />
-                        <span className="text-accent-coral font-medium">선택은 한 달에 한 번, 변경할 수 없어요.</span>
+                    <p className="text-foreground/60 max-w-lg mx-auto">
+                        이번 달 4권의 책 중 하나를 선택하세요.
+                        <br />
+                        같은 책을 선택한 분과 1:1로 매칭됩니다.
                     </p>
                 </div>
 
-                {/* Loading State */}
-                {isLoading ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {[1, 2, 3, 4].map((i) => (
-                            <div key={i} className="bg-white rounded-2xl p-5 shadow-book animate-pulse">
-                                <div className="aspect-[3/4] rounded-xl bg-secondary-200 mb-4" />
-                                <div className="h-5 bg-secondary-200 rounded mb-2" />
-                                <div className="h-4 bg-secondary-200 rounded w-2/3" />
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <>
-                        {/* Books Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                            {books.map((book) => (
-                                <BookCard
-                                    key={book.id}
-                                    book={book}
-                                    isSelected={selectedBookId === book.id}
-                                    onSelect={handleSelect}
+                {/* 책 그리드 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-24">
+                    {isLoading
+                        ? Array(4)
+                            .fill(null)
+                            .map((_, i) => (
+                                <div
+                                    key={i}
+                                    className="h-48 bg-secondary-100 rounded-2xl animate-pulse"
                                 />
-                            ))}
-                        </div>
-
-                        {/* Selection Confirmation */}
-                        <div className={`
-              fixed bottom-0 left-0 right-0 
-              bg-white border-t border-secondary-300 
-              shadow-lg
-              transition-transform duration-300
-              ${selectedBookId ? 'translate-y-0' : 'translate-y-full'}
-            `}>
-                            <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    {selectedBook && (
-                                        <>
-                                            <span className="text-2xl">
-                                                {BOOK_CATEGORIES[selectedBook.category as BookCategory]?.emoji}
-                                            </span>
-                                            <div>
-                                                <p className="text-sm text-primary-500">선택한 책</p>
-                                                <p className="font-serif font-semibold text-primary-900">
-                                                    {selectedBook.title}
-                                                </p>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-
+                            ))
+                        : THIS_MONTH_BOOKS.map((book) => {
+                            const isSelected = selectedBookId === book.id;
+                            return (
                                 <button
-                                    onClick={handleSubmit}
-                                    disabled={!selectedBookId || isSubmitting}
-                                    className={`
-                    px-8 py-3 rounded-full font-medium
-                    transition-all duration-300
-                    ${selectedBookId
-                                            ? 'bg-primary-900 text-white hover:bg-primary-800 shadow-lg'
-                                            : 'bg-secondary-300 text-primary-400 cursor-not-allowed'
-                                        }
-                  `}
+                                    key={book.id}
+                                    onClick={() => setSelectedBookId(book.id)}
+                                    className={`group relative p-6 rounded-2xl border-2 text-left transition-all duration-300 hover-lift ${isSelected
+                                            ? 'border-primary-500 bg-primary-50 shadow-book'
+                                            : 'border-secondary-200 bg-white hover:border-primary-200'
+                                        }`}
                                 >
-                                    {isSubmitting ? (
-                                        <span className="flex items-center gap-2">
-                                            <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24">
-                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                                    {/* 선택 체크 */}
+                                    {isSelected && (
+                                        <div className="absolute top-4 right-4 w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center">
+                                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                             </svg>
-                                            매칭 중...
-                                        </span>
-                                    ) : (
-                                        '이 책으로 시작하기'
+                                        </div>
                                     )}
+
+                                    {/* 카테고리 배지 */}
+                                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-100 rounded-full text-xs font-medium text-foreground/70 mb-4">
+                                        <span>{getCategoryEmoji(book.category)}</span>
+                                        <span>{getCategoryLabel(book.category)}</span>
+                                    </div>
+
+                                    {/* 책 정보 */}
+                                    <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
+                                        {book.title}
+                                    </h3>
+                                    <p className="text-sm text-foreground/50 mb-3">
+                                        {book.author}
+                                    </p>
+                                    <p className="text-sm text-foreground/60 leading-relaxed line-clamp-2">
+                                        {book.description}
+                                    </p>
+
+                                    {/* 호버 안내 */}
+                                    <div className={`mt-4 text-xs font-medium ${isSelected ? 'text-primary-600' : 'text-foreground/40'}`}>
+                                        {isSelected ? '✓ 선택됨' : '클릭하여 선택하기'}
+                                    </div>
                                 </button>
-                            </div>
-                        </div>
-                    </>
-                )}
+                            );
+                        })}
+                </div>
             </div>
+
+            {/* 하단 고정 푸터 */}
+            {selectedBookId && (
+                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-secondary-200 p-4 animate-slide-up">
+                    <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                            <p className="text-sm text-foreground/50 truncate">
+                                선택: {THIS_MONTH_BOOKS.find((b) => b.id === selectedBookId)?.title}
+                            </p>
+                        </div>
+                        <button
+                            onClick={handleConfirm}
+                            className="btn-primary whitespace-nowrap"
+                        >
+                            이 책으로 시작하기 →
+                        </button>
+                    </div>
+                </div>
+            )}
         </main>
     );
 }

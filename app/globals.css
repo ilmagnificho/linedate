@@ -1,80 +1,50 @@
 @import "tailwindcss";
 
-/* =============================================
-   DeckDrop - Custom CSS Styles
-   ============================================= */
-
 :root {
-  /* Primary Colors */
-  --color-primary-900: #102a43;
-  --color-primary-800: #243b53;
-  --color-primary-700: #334e68;
-  --color-primary-600: #486581;
-  --color-primary-500: #627d98;
-  --color-primary-100: #d9e2ec;
-  
-  /* Secondary Colors */
-  --color-secondary-300: #f5f0e8;
-  --color-secondary-200: #faf8f5;
-  --color-secondary-100: #fdfcfb;
-  
-  /* Accent Colors */
-  --color-accent-warm: #c9a87c;
-  --color-accent-coral: #e07a5f;
-  
-  /* Base */
-  --background: #fdfcfb;
-  --foreground: #102a43;
-  --surface: #ffffff;
+  /* Linedate 색상 변수 */
+  --color-primary: #df5f79;
+  --color-primary-dark: #cb3d5d;
+  --color-secondary: #e2d4be;
+  --color-background: #fefcfa;
+  --color-foreground: #4a3f3a;
+  --color-accent-rose: #e8a4b0;
+  --color-accent-lavender: #c4b5dc;
+  --color-accent-sage: #a8c3b5;
+  --color-accent-peach: #f5c4a1;
+  --color-accent-cream: #faf6f0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-pretendard), system-ui, sans-serif;
-  --font-serif: var(--font-noto-serif), Georgia, serif;
+/* 기본 스타일 */
+html {
+  scroll-behavior: smooth;
 }
 
-/* Global Styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, system-ui, sans-serif;
 }
 
-/* Selection */
-::selection {
-  background: var(--color-accent-warm);
-  color: white;
-}
-
-/* Scrollbar */
+/* 스크롤바 스타일 */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-secondary-200);
+  background: #f5f0e3;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-primary-300);
-  border-radius: 4px;
+  background: #e8a4b0;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-primary-500);
+  background: #df5f79;
 }
 
-/* Custom Utilities */
-.text-balance {
-  text-wrap: balance;
-}
-
-/* Book Card Selection Animation */
+/* 책 카드 애니메이션 */
 .book-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -83,41 +53,108 @@ body {
   transform: translateY(-4px);
 }
 
-.book-card[data-selected="true"] {
-  transform: scale(1.02);
-  box-shadow: 0 0 0 3px var(--color-primary-900);
+/* 블러 트랜지션 */
+.blur-transition {
+  transition: filter 0.8s ease-out, opacity 0.8s ease-out;
 }
 
-/* Blur Transition for Profile Reveal */
-.blur-profile {
-  filter: blur(10px);
-  transition: filter 0.8s ease-out;
+/* 버튼 스타일 */
+.btn-primary {
+  background: linear-gradient(135deg, #df5f79 0%, #cb3d5d 100%);
+  color: white;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.875rem 2rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(223, 95, 121, 0.3);
 }
 
-.blur-profile.revealed {
-  filter: blur(0);
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(223, 95, 121, 0.4);
 }
 
-/* Message Bubble */
-.message-bubble {
-  animation: slideIn 0.3s ease-out;
+.btn-secondary {
+  background: white;
+  color: #df5f79;
+  font-weight: 600;
+  border: 2px solid #df5f79;
+  border-radius: 9999px;
+  padding: 0.875rem 2rem;
+  transition: all 0.2s ease;
 }
 
-@keyframes slideIn {
+.btn-secondary:hover {
+  background: #fdf4f5;
+}
+
+/* 채팅 메시지 버블 */
+.message-own {
+  background: linear-gradient(135deg, #df5f79 0%, #ec899b 100%);
+  color: white;
+  border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+}
+
+.message-other {
+  background: #f5f0e3;
+  color: #4a3f3a;
+  border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+}
+
+/* 입력 필드 */
+.input-primary {
+  background: white;
+  border: 1.5px solid #e2d4be;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-primary:focus {
+  outline: none;
+  border-color: #df5f79;
+  box-shadow: 0 0 0 3px rgba(223, 95, 121, 0.1);
+}
+
+/* 카드 스타일 */
+.card {
+  background: white;
+  border-radius: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f5f0e3;
+}
+
+/* 그라데이션 텍스트 */
+.text-gradient {
+  background: linear-gradient(135deg, #df5f79 0%, #c4b5dc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 페이드 인 애니메이션 */
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Gradient Text */
-.gradient-text {
-  background: linear-gradient(135deg, var(--color-primary-900), var(--color-primary-600));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* 부드러운 호버 */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }

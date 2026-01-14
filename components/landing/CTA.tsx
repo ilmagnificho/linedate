@@ -1,65 +1,62 @@
+'use client';
+
 import Link from 'next/link';
 
 export default function CTA() {
     return (
-        <section className="py-24 bg-gradient-to-b from-white to-secondary-200">
-            <div className="max-w-4xl mx-auto px-6 text-center">
-                {/* Quote */}
-                <div className="mb-12">
-                    <blockquote className="font-serif text-2xl md:text-3xl text-primary-800 italic leading-relaxed">
-                        "마지막으로 읽은 책,<br />
-                        누군가와 나눠본 적 있나요?"
-                    </blockquote>
-                    <div className="mt-4 w-12 h-0.5 bg-accent-warm mx-auto" />
+        <section className="py-24 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 relative overflow-hidden">
+            {/* 장식 요소 */}
+            <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute bottom-0 right-0 w-80 h-80 bg-white/5 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+
+            <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+                {/* 인용문 */}
+                <div className="mb-10">
+                    <span className="text-5xl opacity-50">💕</span>
                 </div>
 
-                {/* Main CTA */}
-                <div className="bg-primary-900 rounded-3xl p-10 md:p-14 text-white">
-                    <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">
-                        이달의 책을 확인하세요
-                    </h2>
-                    <p className="text-primary-200 mb-8 max-w-lg mx-auto">
-                        지금 가입하면, 이번 달 선정된 4권의 책을 확인하고<br />
-                        같은 취향을 가진 사람과 매칭될 수 있어요.
-                    </p>
+                <blockquote className="font-serif text-2xl md:text-3xl lg:text-4xl text-white/95 leading-relaxed mb-8">
+                    &ldquo;마지막으로 읽은 책,
+                    <br />
+                    누군가와 나눠본 적 있나요?&rdquo;
+                </blockquote>
 
-                    <Link
-                        href="/select"
-                        className="
-              inline-flex items-center gap-3 px-10 py-5
-              bg-white text-primary-900 rounded-full
-              font-bold text-lg
-              shadow-lg hover:shadow-xl
-              hover:bg-secondary-100
-              transition-all duration-300
-              hover:-translate-y-1
-            "
-                    >
-                        <span className="text-xl">📖</span>
-                        <span>책으로 인연 시작하기</span>
-                    </Link>
+                <p className="text-white/70 text-lg mb-10 max-w-xl mx-auto">
+                    같은 책에 마음이 머문 사람이라면,
+                    <br />
+                    대화도 더 깊어질 수 있지 않을까요?
+                </p>
 
-                    {/* Features */}
-                    <div className="mt-10 pt-8 border-t border-primary-700 grid grid-cols-3 gap-4 text-sm">
-                        <div className="text-primary-200">
-                            <div className="text-2xl mb-1">🔒</div>
-                            블라인드 프로필
-                        </div>
-                        <div className="text-primary-200">
-                            <div className="text-2xl mb-1">💬</div>
-                            실시간 채팅
-                        </div>
-                        <div className="text-primary-200">
-                            <div className="text-2xl mb-1">✨</div>
-                            무료 시작
-                        </div>
+                {/* CTA 버튼 */}
+                <Link
+                    href="/select"
+                    className="inline-flex items-center gap-3 bg-white text-primary-600 font-semibold text-lg px-10 py-4 rounded-full hover:bg-primary-50 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                >
+                    <span>📖</span>
+                    <span>책으로 인연 시작하기</span>
+                </Link>
+
+                {/* 추가 정보 */}
+                <div className="mt-12 flex flex-wrap justify-center gap-8 text-white/60 text-sm">
+                    <div className="flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span>월 1회 매칭</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span>안심 블라인드</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span>취향 기반 매칭</span>
                     </div>
                 </div>
-
-                {/* Footer Note */}
-                <p className="mt-8 text-sm text-primary-500">
-                    DeckDrop은 진정성 있는 만남을 추구합니다.
-                </p>
             </div>
         </section>
     );

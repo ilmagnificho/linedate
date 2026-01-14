@@ -9,64 +9,79 @@ const config: Config = {
     theme: {
         extend: {
             colors: {
-                // Primary: Deep Navy (신뢰감)
+                // Linedate 여성 친화적 색상 팔레트
                 primary: {
-                    50: '#f0f4f8',
-                    100: '#d9e2ec',
-                    200: '#bcccdc',
-                    300: '#9fb3c8',
-                    400: '#829ab1',
-                    500: '#627d98',
-                    600: '#486581',
-                    700: '#334e68',
-                    800: '#243b53',
-                    900: '#102a43',
+                    50: '#fdf4f5',
+                    100: '#fce8eb',
+                    200: '#f9d5db',
+                    300: '#f4b4bf',
+                    400: '#ec899b',
+                    500: '#df5f79',  // 메인 로즈 핑크
+                    600: '#cb3d5d',
+                    700: '#ab2f4c',
+                    800: '#8f2a44',
+                    900: '#7a273f',
                 },
-                // Secondary: Ivory/Paper (따스함)
                 secondary: {
-                    50: '#fffffe',
-                    100: '#fdfcfb',
-                    200: '#faf8f5',
-                    300: '#f5f0e8',
-                    400: '#e8dfd3',
-                    500: '#d4c8b8',
+                    50: '#fefdfb',
+                    100: '#fdfcf7',
+                    200: '#faf7ef',
+                    300: '#f5f0e3',
+                    400: '#ede4d3',
+                    500: '#e2d4be',  // 크림/아이보리
+                    600: '#d4c3a8',
+                    700: '#c2ac8a',
+                    800: '#a89170',
+                    900: '#8a7659',
                 },
-                // Background & Surface
-                background: '#fdfcfb',
-                surface: '#ffffff',
-                // Accent
                 accent: {
-                    warm: '#c9a87c',
-                    coral: '#e07a5f',
+                    rose: '#e8a4b0',      // 부드러운 로즈
+                    lavender: '#c4b5dc',  // 라벤더
+                    sage: '#a8c3b5',      // 세이지 그린
+                    peach: '#f5c4a1',     // 피치
+                    cream: '#faf6f0',     // 크림
                 },
+                background: '#fefcfa',  // 따뜻한 화이트
+                foreground: '#4a3f3a',  // 부드러운 다크 브라운
             },
             fontFamily: {
-                sans: ['var(--font-pretendard)', 'Pretendard', 'system-ui', 'sans-serif'],
-                serif: ['var(--font-noto-serif)', 'Noto Serif KR', 'Georgia', 'serif'],
+                sans: ["'Pretendard Variable'", "Pretendard", "-apple-system", "system-ui", "sans-serif"],
+                serif: ["var(--font-noto-serif)", "'Noto Serif KR'", "Georgia", "serif"],
             },
             boxShadow: {
-                'book': '0 4px 6px -1px rgba(16, 42, 67, 0.1), 0 2px 4px -1px rgba(16, 42, 67, 0.06)',
-                'book-hover': '0 10px 15px -3px rgba(16, 42, 67, 0.15), 0 4px 6px -2px rgba(16, 42, 67, 0.08)',
-                'card': '0 1px 3px rgba(16, 42, 67, 0.08), 0 1px 2px rgba(16, 42, 67, 0.06)',
+                'book': '0 4px 14px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04)',
+                'book-hover': '0 8px 30px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06)',
+                'soft': '0 2px 8px rgba(0, 0, 0, 0.06)',
+                'card': '0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)',
             },
             animation: {
-                'blur-reveal': 'blur-reveal 0.8s ease-out forwards',
-                'fade-in': 'fade-in 0.5s ease-out forwards',
-                'slide-up': 'slide-up 0.5s ease-out forwards',
+                'blur-reveal': 'blurReveal 0.8s ease-out forwards',
+                'fade-in': 'fadeIn 0.5s ease-out',
+                'slide-up': 'slideUp 0.4s ease-out',
+                'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
             },
             keyframes: {
-                'blur-reveal': {
-                    '0%': { filter: 'blur(10px)' },
-                    '100%': { filter: 'blur(0px)' },
+                blurReveal: {
+                    '0%': { filter: 'blur(12px)', opacity: '0.6' },
+                    '100%': { filter: 'blur(0px)', opacity: '1' },
                 },
-                'fade-in': {
+                fadeIn: {
                     '0%': { opacity: '0' },
                     '100%': { opacity: '1' },
                 },
-                'slide-up': {
-                    '0%': { opacity: '0', transform: 'translateY(20px)' },
+                slideUp: {
+                    '0%': { opacity: '0', transform: 'translateY(10px)' },
                     '100%': { opacity: '1', transform: 'translateY(0)' },
                 },
+                pulseSoft: {
+                    '0%, 100%': { opacity: '1' },
+                    '50%': { opacity: '0.7' },
+                },
+            },
+            borderRadius: {
+                'xl': '1rem',
+                '2xl': '1.25rem',
+                '3xl': '1.5rem',
             },
         },
     },

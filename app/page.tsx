@@ -9,15 +9,15 @@ export default function Home() {
       <Features />
       <CTA />
 
-      {/* Footer */}
-      <footer className="py-8 bg-secondary-200 border-t border-secondary-300">
+      {/* 푸터 */}
+      <footer className="bg-white border-t border-secondary-200 py-8">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <span className="text-2xl">📚</span>
-            <span className="font-serif text-xl font-bold text-primary-900">DeckDrop</span>
+            <span className="text-xl">📖</span>
+            <span className="font-serif font-semibold text-foreground">Linedate</span>
           </div>
-          <p className="text-sm text-primary-500">
-            © 2026 DeckDrop. 책으로 시작하는 인연.
+          <p className="text-sm text-foreground/50">
+            © 2026 Linedate. 책으로 이어지는 인연.
           </p>
         </div>
       </footer>

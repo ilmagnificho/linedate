@@ -11,19 +11,19 @@ const notoSerif = Noto_Serif_KR({
 });
 
 export const metadata: Metadata = {
-  title: "DeckDrop - 책으로 만나는 블라인드 데이팅",
-  description: "같은 문장에 밑줄 긋는 사람, 그게 운명 아닐까요? 얼굴보다 취향이 먼저인 블라인드 데이팅.",
-  keywords: ["블라인드 데이팅", "도서", "책", "취향 매칭", "데이팅 앱"],
+  title: "Linedate - 책으로 이어지는 인연",
+  description: "같은 문장에 밑줄 긋는 사람, 그게 운명 아닐까요? 책 취향으로 만나는 블라인드 데이팅.",
+  keywords: ["블라인드 데이팅", "도서", "책", "취향 매칭", "데이팅 앱", "Linedate"],
   openGraph: {
-    title: "DeckDrop - 책으로 만나는 블라인드 데이팅",
-    description: "같은 문장에 밑줄 긋는 사람을 찾아요. 얼굴보다 취향이 먼저 🔖",
+    title: "Linedate - 책으로 이어지는 인연",
+    description: "같은 문장에 밑줄 긋는 사람을 찾아요. 얼굴보다 취향이 먼저 📖",
     type: "website",
     locale: "ko_KR",
-    siteName: "DeckDrop",
+    siteName: "Linedate",
   },
   twitter: {
     card: "summary_large_image",
-    title: "DeckDrop - 책으로 만나는 블라인드 데이팅",
+    title: "Linedate - 책으로 이어지는 인연",
     description: "같은 문장에 밑줄 긋는 사람을 찾아요",
   },
 };
@@ -45,8 +45,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${notoSerif.variable} antialiased bg-background text-primary-900`}
-        style={{ fontFamily: "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif" }}
+        className={`${notoSerif.variable} antialiased`}
       >
         {children}
       </body>
