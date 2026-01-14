@@ -24,43 +24,44 @@ export default function Hero() {
             {/* 배경 그라데이션 (핑크 톤 강화) */}
             <div className="absolute inset-0 bg-gradient-to-b from-primary-50 via-white to-secondary-50 -z-10" />
 
-            {/* 장식 요소: 핑크/피치 블러 */}
-            <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[30%] bg-primary-200/40 rounded-full blur-[80px]" />
-            <div className="absolute bottom-[10%] left-[-10%] w-[60%] h-[40%] bg-accent-peach/30 rounded-full blur-[80px]" />
+            {/* 장식 요소: 핑크/피치 블러 - 투명도 조정 */}
+            <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[30%] bg-primary-200/30 rounded-full blur-[60px]" />
+            <div className="absolute bottom-[10%] left-[-10%] w-[60%] h-[40%] bg-accent-peach/20 rounded-full blur-[60px]" />
 
-            <div className="flex-1 flex flex-col justify-center items-center text-center px-6 pt-24 pb-10 max-w-md mx-auto w-full relative z-10">
-                {/* 배지 */}
-                <div className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white/80 backdrop-blur-sm rounded-full border border-primary-200 mb-8 shadow-sm animate-fade-in">
-                    <span className="text-base">🌸</span>
-                    <span className="text-xs font-bold text-primary-600 tracking-wide">설레는 책 취향 발견</span>
+            <div className="flex-1 flex flex-col justify-center items-center text-center px-6 pt-20 pb-8 max-w-md mx-auto w-full relative z-10">
+                <div className="flex-1 flex flex-col justify-center items-center w-full">
+                    {/* 배지 */}
+                    <div className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white/80 backdrop-blur-sm rounded-full border border-primary-200 mb-6 shadow-sm animate-fade-in">
+                        <span className="text-base">🌸</span>
+                        <span className="text-xs font-bold text-primary-600 tracking-wide">설레는 책 취향 발견</span>
+                    </div>
+
+                    {/* 메인 헤드라인 */}
+                    <h1 className="font-serif text-4xl md:text-5xl font-bold leading-[1.2] mb-5 text-gray-900 tracking-tight">
+                        <span className="relative inline-block">
+                            <span className="relative z-10">같은 문장</span>
+                            <span className="absolute bottom-1 left-0 right-0 h-3 bg-primary-200/60 -z-10 rounded-full"></span>
+                        </span>에<br />
+                        마음이 <span className="text-primary-500">통했나요?</span>
+                    </h1>
+
+                    {/* 서브 헤드라인 */}
+                    <p className="text-base text-gray-600 mb-8 leading-relaxed max-w-xs mx-auto break-keep">
+                        얼굴보다 취향이 먼저.<br />
+                        서로의 밑줄이 겹칠 때, 운명은 시작됩니다.
+                    </p>
                 </div>
 
-                {/* 메인 헤드라인 */}
-                <h1 className="font-serif text-4xl md:text-5xl font-bold leading-[1.2] mb-6 text-gray-900 tracking-tight">
-                    <span className="relative inline-block">
-                        <span className="relative z-10">같은 문장</span>
-                        <span className="absolute bottom-1 left-0 right-0 h-3 bg-primary-200/60 -z-10 rounded-full"></span>
-                    </span>에<br />
-                    마음이 <span className="text-primary-500">통했나요?</span>
-                </h1>
-
-                {/* 서브 헤드라인 */}
-                <p className="text-base text-gray-600 mb-12 leading-relaxed max-w-xs mx-auto break-keep">
-                    얼굴보다 취향이 먼저.<br />
-                    서로의 밑줄이 겹칠 때, 운명은 시작됩니다.
-                </p>
-
-                {/* CTA 버튼 */}
-                <div className="w-full flex flex-col gap-3 mt-auto mb-8">
+                {/* CTA 버튼 - 하단 고정 느낌 */}
+                <div className="w-full flex flex-col gap-3 mt-4 mb-4">
                     <Link
                         href="/select"
-                        className="w-full bg-primary-500 text-white font-bold text-xl py-5 rounded-2xl shadow-lg shadow-primary-200 hover:bg-primary-600 hover:shadow-xl transition-all hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-2"
+                        className="w-full bg-primary-500 text-white font-bold text-xl py-4 rounded-2xl shadow-lg shadow-primary-200 hover:bg-primary-600 hover:shadow-xl transition-all hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-2"
                     >
-                        <span>내 인연 찾기</span>
-                        <span>💌</span>
+                        <span>책으로 인연 시작하기</span>
                     </Link>
                     <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
                         <span>지금 42명이 대화하고 있어요</span>
                     </div>
                 </div>

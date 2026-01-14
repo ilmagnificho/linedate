@@ -44,18 +44,18 @@ export default function Features() {
                 </div>
 
                 {/* 피처 카드 */}
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4">
                     {features.map((feature, index) => (
                         <div
                             key={feature.step}
-                            className="bg-white rounded-2xl p-6 border border-secondary-200 shadow-sm hover:shadow-md transition-all flex items-start gap-4"
+                            className="bg-white rounded-2xl p-5 border border-secondary-200 shadow-sm flex items-center gap-4"
                         >
                             {/* 아이콘 */}
-                            <div className="shrink-0 text-3xl">
+                            <div className="shrink-0 text-3xl p-2 bg-primary-50 rounded-full">
                                 {feature.icon}
                             </div>
 
-                            <div>
+                            <div className="flex-1 text-left">
                                 <h3 className="font-serif text-lg font-bold text-gray-900 mb-1">
                                     {feature.title}
                                 </h3>

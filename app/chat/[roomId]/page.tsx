@@ -243,7 +243,7 @@ export default function ChatRoomPage() {
                     return (
                         <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
                             <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${isOwn
-                                    ? 'bg-primary-600 text-white rounded-br-none'
+                                    ? 'bg-primary-500 text-white rounded-br-none'
                                     : 'bg-white border border-secondary-200 text-gray-800 rounded-bl-none'
                                 }`}>
                                 {msg.content}
