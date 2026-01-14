@@ -1,101 +1,62 @@
-// Database Types for DeckDrop
+export type BookCategory = 'emotion' | 'growth' | 'romance' | 'philosophy' | 'fantasy';
 
 export interface User {
     id: string;
     email: string;
-    nickname: string;
-    gender: 'male' | 'female';
-    avatar_url: string | null;
+    nickname?: string;
+    avatar_url?: string;
     created_at: string;
-    updated_at: string;
+    // V2 추가 필드
+    age_range?: string; // '20s_early', '20s_late', '30s_early', ...
+    region?: string;    // 'seoul', 'gyeonggi', ...
+    reading_frequency?: string; // 'weekly', 'monthly', ...
+    underlines_balance?: number;
+}
+
+export interface ReadingProfile {
+    id: string;
+    user_id: string;
+    favorite_books: {
+        title: string;
+        author: string;
+        reason?: string;
+    }[];
+    preferred_genres: string[];
+    created_at: string;
+}
+
+export interface Underline {
+    id: string;
+    user_id: string;
+    book_id: string;
+    content: string;
+    month_year: string;
+    created_at: string;
 }
 
 export interface Book {
     id: string;
     title: string;
     author: string;
-    cover_url: string | null;
-    description: string | null;
-    genre: string | null;
+    description: string;
+    cover_url: string;
     category: BookCategory;
-    is_active: boolean;
-    month_year: string;
-    created_at: string;
-}
-
-export type BookCategory =
-    | 'emotion'      // 감정/공감
-    | 'growth'       // 성장/자아
-    | 'romance'      // 사랑/관계
-    | 'philosophy'   // 철학/인문
-    | 'fantasy';     // 판타지/상상
-
-export interface UserSelection {
-    id: string;
-    user_id: string;
-    book_id: string;
-    month_year: string;
-    created_at: string;
-}
-
-export interface Match {
-    id: string;
-    user1_id: string;
-    user2_id: string;
-    book_id: string;
-    status: 'active' | 'ended';
-    message_count: number;
-    created_at: string;
+    is_active: boolean; // 이달의 책 여부
 }
 
 export interface Message {
     id: string;
-    match_id: string;
+    room_id: string;
     sender_id: string;
     content: string;
     created_at: string;
+    is_read: boolean;
 }
 
-// Extended types for UI
-export interface BookWithSelection extends Book {
-    isSelected?: boolean;
+export interface ChatRoom {
+    id: string;
+    users: string[]; // [user_id_1, user_id_2]
+    last_message?: string;
+    updated_at: string;
+    book_id?: string; // 어떤 책으로 매칭되었는지
 }
-
-export interface MatchWithDetails extends Match {
-    partner: User;
-    book: Book;
-}
-
-export interface MessageWithSender extends Message {
-    sender: User;
-    isOwn: boolean;
-}
-
-// 도서 카테고리 정보
-export const BOOK_CATEGORIES: Record<BookCategory, { label: string; emoji: string; description: string }> = {
-    emotion: {
-        label: '감정/공감',
-        emoji: '💭',
-        description: '마음을 어루만지는 책'
-    },
-    growth: {
-        label: '성장/자아',
-        emoji: '🌱',
-        description: '나를 발견하는 책'
-    },
-    romance: {
-        label: '사랑/관계',
-        emoji: '💕',
-        description: '관계를 생각하는 책'
-    },
-    philosophy: {
-        label: '철학/인문',
-        emoji: '📜',
-        description: '깊이 생각하는 책'
-    },
-    fantasy: {
-        label: '판타지/상상',
-        emoji: '✨',
-        description: '상상력을 자극하는 책'
-    }
-};

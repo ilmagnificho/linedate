@@ -1,34 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import Link from 'next/link';
 import { THIS_MONTH_BOOKS, getCategoryLabel, getCategoryEmoji } from '@/lib/books';
+import { BookCategory } from '@/types/database';
+
+const CATEGORIES: BookCategory[] = ['emotion', 'growth', 'romance', 'fantasy'];
 
 export default function SelectPage() {
-    const router = useRouter();
-    const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState<BookCategory | 'all'>('all');
 
-    useEffect(() => {
-        // 로딩 시뮬레이션
-        const timer = setTimeout(() => setIsLoading(false), 500);
-        return () => clearTimeout(timer);
-    }, []);
-
-    const handleConfirm = () => {
-        if (selectedBookId) {
-            router.push('/waiting');
-        }
-    };
+    const filteredBooks = activeTab === 'all'
+        ? THIS_MONTH_BOOKS
+        : THIS_MONTH_BOOKS.filter(book => book.category === activeTab);
 
     const getCurrentMonth = () => {
         const now = new Date();
-        return `${now.getFullYear()}년 ${now.getMonth() + 1}월의 책`;
+        return `${now.getMonth() + 1}월의 서재`;
     };
 
     return (
-        <main className="min-h-screen bg-[#fefcfa]">
+        <main className="min-h-screen bg-[#fefcfa] pb-20">
             {/* 헤더 */}
             <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-secondary-200">
                 <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -36,100 +28,87 @@ export default function SelectPage() {
                         <span className="text-xl">📖</span>
                         <span className="font-serif font-semibold text-foreground">Linedate</span>
                     </Link>
-                    <span className="text-sm text-foreground/50">{getCurrentMonth()}</span>
+                    <span className="text-sm font-medium text-foreground/50 bg-secondary-100 px-3 py-1 rounded-full">{getCurrentMonth()}</span>
+                </div>
+
+                {/* 카테고리 탭 (모바일 스크롤) */}
+                <div className="max-w-4xl mx-auto px-4 overflow-x-auto scrollbar-hide">
+                    <div className="flex gap-2 py-3 min-w-max">
+                        <button
+                            onClick={() => setActiveTab('all')}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'all'
+                                    ? 'bg-foreground text-white shadow-md'
+                                    : 'bg-white text-foreground/60 border border-secondary-200 hover:bg-secondary-50'
+                                }`}
+                        >
+                            전체
+                        </button>
+                        {CATEGORIES.map((cat) => (
+                            <button
+                                key={cat}
+                                onClick={() => setActiveTab(cat)}
+                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === cat
+                                        ? 'bg-primary-500 text-white shadow-md'
+                                        : 'bg-white text-foreground/60 border border-secondary-200 hover:bg-primary-50 hover:text-primary-600'
+                                    }`}
+                            >
+                                <span>{getCategoryEmoji(cat)}</span>
+                                <span>{getCategoryLabel(cat)}</span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </header>
 
             {/* 메인 콘텐츠 */}
-            <div className="max-w-4xl mx-auto px-6 py-12">
-                {/* 타이틀 */}
-                <div className="text-center mb-12">
-                    <h1 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-4">
-                        어떤 책으로 인연을 시작할까요?
+            <div className="max-w-4xl mx-auto px-6 py-8">
+                <div className="text-center mb-8">
+                    <h1 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-2">
+                        이달의 책을 소개합니다
                     </h1>
-                    <p className="text-foreground/60 max-w-lg mx-auto">
-                        이번 달 4권의 책 중 하나를 선택하세요.
-                        <br />
-                        같은 책을 선택한 분과 1:1로 매칭됩니다.
+                    <p className="text-foreground/60 text-sm md:text-base">
+                        마음에 드는 책을 선택하고 밑줄을 남겨보세요.<br />
+                        같은 책을 고른 분과 대화가 시작됩니다.
                     </p>
                 </div>
 
                 {/* 책 그리드 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-24">
-                    {isLoading
-                        ? Array(4)
-                            .fill(null)
-                            .map((_, i) => (
-                                <div
-                                    key={i}
-                                    className="h-48 bg-secondary-100 rounded-2xl animate-pulse"
-                                />
-                            ))
-                        : THIS_MONTH_BOOKS.map((book) => {
-                            const isSelected = selectedBookId === book.id;
-                            return (
-                                <button
-                                    key={book.id}
-                                    onClick={() => setSelectedBookId(book.id)}
-                                    className={`group relative p-6 rounded-2xl border-2 text-left transition-all duration-300 hover-lift ${isSelected
-                                            ? 'border-primary-500 bg-primary-50 shadow-book'
-                                            : 'border-secondary-200 bg-white hover:border-primary-200'
-                                        }`}
-                                >
-                                    {/* 선택 체크 */}
-                                    {isSelected && (
-                                        <div className="absolute top-4 right-4 w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center">
-                                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </div>
-                                    )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {filteredBooks.map((book) => (
+                        <Link
+                            key={book.id}
+                            href={`/books/${book.id}`}
+                            className="group bg-white rounded-2xl p-5 border border-secondary-200 hover:border-primary-300 hover:shadow-book transition-all duration-300 flex flex-col items-center text-center relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 left-0 w-full h-1 bg-primary-100 group-hover:bg-primary-400 transition-colors" />
 
-                                    {/* 카테고리 배지 */}
-                                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-100 rounded-full text-xs font-medium text-foreground/70 mb-4">
-                                        <span>{getCategoryEmoji(book.category)}</span>
-                                        <span>{getCategoryLabel(book.category)}</span>
-                                    </div>
+                            <div className="w-28 h-40 mb-4 bg-secondary-100 rounded shadow-md group-hover:-translate-y-1 transition-transform duration-300">
+                                {/* 이미지 */}
+                                {book.cover_url && <img src={book.cover_url} alt={book.title} className="w-full h-full object-cover rounded" />}
+                            </div>
 
-                                    {/* 책 정보 */}
-                                    <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
-                                        {book.title}
-                                    </h3>
-                                    <p className="text-sm text-foreground/50 mb-3">
-                                        {book.author}
-                                    </p>
-                                    <p className="text-sm text-foreground/60 leading-relaxed line-clamp-2">
-                                        {book.description}
-                                    </p>
+                            <div className="flex flex-col gap-1 w-full">
+                                <div className="text-xs text-primary-600 font-medium mb-1">
+                                    {getCategoryLabel(book.category)}
+                                </div>
+                                <h3 className="font-serif text-lg font-bold text-foreground line-clamp-1 group-hover:text-primary-700 transition-colors">
+                                    {book.title}
+                                </h3>
+                                <p className="text-sm text-foreground/50">
+                                    {book.author}
+                                </p>
+                                <p className="text-xs text-foreground/60 mt-3 line-clamp-2 leading-relaxed">
+                                    {book.description}
+                                </p>
+                            </div>
 
-                                    {/* 호버 안내 */}
-                                    <div className={`mt-4 text-xs font-medium ${isSelected ? 'text-primary-600' : 'text-foreground/40'}`}>
-                                        {isSelected ? '✓ 선택됨' : '클릭하여 선택하기'}
-                                    </div>
-                                </button>
-                            );
-                        })}
+                            <div className="mt-4 w-full py-2 rounded-lg bg-secondary-50 text-sm font-medium text-foreground/70 group-hover:bg-primary-50 group-hover:text-primary-700 transition-colors">
+                                밑줄 긋기 ✐
+                            </div>
+                        </Link>
+                    ))}
                 </div>
             </div>
-
-            {/* 하단 고정 푸터 */}
-            {selectedBookId && (
-                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-secondary-200 p-4 animate-slide-up">
-                    <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm text-foreground/50 truncate">
-                                선택: {THIS_MONTH_BOOKS.find((b) => b.id === selectedBookId)?.title}
-                            </p>
-                        </div>
-                        <button
-                            onClick={handleConfirm}
-                            className="btn-primary whitespace-nowrap"
-                        >
-                            이 책으로 시작하기 →
-                        </button>
-                    </div>
-                </div>
-            )}
         </main>
     );
 }

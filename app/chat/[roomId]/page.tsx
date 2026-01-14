@@ -3,86 +3,163 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-
-// 목업 데이터
-const MOCK_PARTNER = {
-    id: 'partner-1',
-    nickname: '책읽는고양이',
-    avatar_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
-};
-
-const MOCK_BOOK = {
-    title: '미드나잇 라이브러리',
-    author: '매트 헤이그',
-    icebreaker: '살면서 "그때 다른 선택을 했다면..." 하고 후회한 적 있으신가요?',
-};
-
-const MOCK_MY_ID = 'my-id';
-
-interface Message {
-    id: string;
-    sender_id: string;
-    content: string;
-    created_at: string;
-}
-
-// 자동 응답 메시지
-const AUTO_REPLIES = [
-    '저도 그 부분이 정말 인상 깊었어요 ✨',
-    '맞아요, 책을 읽으면서 저도 비슷한 생각을 했어요',
-    '그 장면에서 저는 눈물이 났었어요 🥹',
-    '혹시 다른 매트 헤이그 책도 읽어보셨어요?',
-    '저는 요즘 에세이도 자주 읽는 편이에요',
-    '오늘 날씨가 책 읽기 좋은 것 같아요 📚',
-    '주말에 주로 어디서 책 읽으세요?',
-    '카페에서 책 읽는 거 좋아하시나요? ☕',
-];
+import { createClient } from '@/lib/supabase/client';
+import { THIS_MONTH_BOOKS } from '@/lib/books';
+import { sendMessage, unlockProfile } from '@/app/actions/chat';
+import { getBalance } from '@/app/actions/billing';
 
 export default function ChatRoomPage() {
     const params = useParams();
-    const [messages, setMessages] = useState<Message[]>([]);
+    const roomId = params?.roomId as string;
+    const listRef = useRef<HTMLDivElement>(null);
+
+    const [messages, setMessages] = useState<any[]>([]);
     const [inputValue, setInputValue] = useState('');
-    const messagesEndRef = useRef<HTMLDivElement>(null);
-    const replyIndexRef = useRef(0);
+    const [myId, setMyId] = useState<string>('');
+    const [partner, setPartner] = useState<any>(null);
+    const [book, setBook] = useState<any>(null);
+    const [partnerUnderline, setPartnerUnderline] = useState<string>('');
 
+    // 추가 상태
+    const [isUnlocked, setIsUnlocked] = useState(false);
+    const [balance, setBalance] = useState(0);
+
+    const supabase = createClient();
     const messageCount = messages.length;
-    const isRevealed = messageCount >= 20;
-    const progress = Math.min(100, (messageCount / 20) * 100);
+    // 공개 레벨 계산 (0~4단계) - 해금 여부 반영
+    const baseRevealLevel = Math.floor(messageCount / 10);
+    const revealLevel = isUnlocked ? 4 : baseRevealLevel;
+    const progress = isUnlocked ? 100 : Math.min(100, (messageCount / 40) * 100);
 
-    // 스크롤 자동 이동
+    // 스크롤 하단 이동
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        if (listRef.current) {
+            listRef.current.scrollTop = listRef.current.scrollHeight;
+        }
     }, [messages]);
+
+    useEffect(() => {
+        const initChat = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+            setMyId(user.id);
+
+            // 내 잔액 확인
+            getBalance().then(setBalance);
+
+            // 1. 이전 메시지 불러오기
+            const { data: existingMessages } = await supabase
+                .from('messages')
+                .select('*')
+                .eq('room_id', roomId)
+                .order('created_at', { ascending: true });
+
+            if (existingMessages) {
+                setMessages(existingMessages);
+            }
+
+            // 2. 상대방 정보 가져오기
+            const { data: roomData } = await supabase
+                .from('chat_rooms')
+                .select('*')
+                .eq('id', roomId)
+                .single();
+
+            if (roomData) {
+                // 해금 여부 확인
+                const unlockedBy = (roomData.unlocked_by as string[]) || [];
+                if (unlockedBy.includes(user.id)) {
+                    setIsUnlocked(true);
+                }
+
+                // 상대방 ID 찾기
+                const partnerId = (roomData.users as string[]).find((id: string) => id !== user.id);
+
+                if (partnerId) {
+                    const { data: partnerData } = await supabase
+                        .from('users')
+                        .select('*')
+                        .eq('id', partnerId)
+                        .single();
+                    setPartner(partnerData);
+
+                    // 상대방의 밑줄
+                    const { data: underlineData } = await supabase
+                        .from('underlines')
+                        .select('*')
+                        .eq('user_id', partnerId)
+                        .limit(1)
+                        .order('created_at', { ascending: false })
+                        .single();
+
+                    if (underlineData) setPartnerUnderline(underlineData.content);
+
+                    // 책 정보
+                    const bookId = roomData.book_id || underlineData?.book_id;
+                    if (bookId) {
+                        const b = THIS_MONTH_BOOKS.find(item => item.id === bookId);
+                        setBook(b);
+                    }
+                }
+            }
+        };
+
+        initChat();
+
+        // 3. 실시간 구독
+        const channel = supabase
+            .channel(`room:${roomId}`)
+            .on('postgres_changes', {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'messages',
+                filter: `room_id=eq.${roomId}`
+            }, (payload) => {
+                setMessages((prev) => [...prev, payload.new]);
+            })
+            .on('postgres_changes', {
+                event: 'UPDATE',
+                schema: 'public',
+                table: 'chat_rooms',
+                filter: `id=eq.${roomId}`
+            }, (payload) => {
+                // 채팅방 정보가 업데이트되면(해금 등) 확인
+                const newRoom = payload.new;
+                if (newRoom.unlocked_by && newRoom.unlocked_by.includes(myId)) {
+                    setIsUnlocked(true);
+                }
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [roomId, myId]); // myId가 설정된 후 재실행되어야 할 수도 있음
 
     const handleSendMessage = async () => {
         if (!inputValue.trim()) return;
-
-        const newMessage: Message = {
-            id: `msg-${Date.now()}`,
-            sender_id: MOCK_MY_ID,
-            content: inputValue,
-            created_at: new Date().toISOString(),
-        };
-
-        setMessages((prev) => [...prev, newMessage]);
+        const content = inputValue;
         setInputValue('');
-
-        // 자동 응답 (데모용)
-        setTimeout(() => {
-            const replyMessage: Message = {
-                id: `msg-${Date.now()}-reply`,
-                sender_id: MOCK_PARTNER.id,
-                content: AUTO_REPLIES[replyIndexRef.current % AUTO_REPLIES.length],
-                created_at: new Date().toISOString(),
-            };
-            replyIndexRef.current += 1;
-            setMessages((prev) => [...prev, replyMessage]);
-        }, 1200);
+        await sendMessage(roomId, content);
     };
 
-    const formatTime = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    const handleUnlock = async () => {
+        if (balance < 5) {
+            if (confirm('밑줄이 부족합니다 (5개 필요). 충전하러 가시겠습니까?')) {
+                window.location.href = '/store';
+            }
+            return;
+        }
+
+        if (confirm('밑줄 5개를 사용하여 상대방의 프로필을 즉시 공개하시겠습니까?')) {
+            const res = await unlockProfile(roomId);
+            if (res.error) {
+                alert('오류가 발생했습니다: ' + res.error);
+            } else {
+                setIsUnlocked(true); // 낙관적 업데이트
+                setBalance(prev => prev - 5);
+            }
+        }
     };
 
     return (
@@ -90,125 +167,96 @@ export default function ChatRoomPage() {
             {/* 헤더 */}
             <header className="sticky top-0 z-10 bg-white border-b border-secondary-200 px-4 py-3">
                 <div className="flex items-center gap-4">
-                    {/* 뒤로가기 */}
                     <Link href="/select" className="p-2 hover:bg-secondary-100 rounded-full transition-colors">
                         <svg className="w-5 h-5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                     </Link>
 
-                    {/* 프로필 */}
-                    <div className="relative">
-                        {/* 프로그레스 링 */}
+                    {/* 프로필 이미지 & 공개도 */}
+                    <div className="relative cursor-pointer" onClick={!isUnlocked ? handleUnlock : undefined}>
                         <svg className="w-14 h-14 -rotate-90">
-                            <circle
-                                cx="28"
-                                cy="28"
-                                r="24"
-                                fill="none"
-                                stroke="#f5f0e3"
-                                strokeWidth="3"
-                            />
-                            <circle
-                                cx="28"
-                                cy="28"
-                                r="24"
-                                fill="none"
-                                stroke="#df5f79"
-                                strokeWidth="3"
-                                strokeDasharray={`${progress * 1.51} 151`}
-                                strokeLinecap="round"
-                                className="transition-all duration-500"
-                            />
+                            <circle cx="28" cy="28" r="24" fill="none" stroke="#f5f0e3" strokeWidth="3" />
+                            <circle cx="28" cy="28" r="24" fill="none" stroke="#df5f79" strokeWidth="3"
+                                strokeDasharray={`${progress * 1.51} 151`} strokeLinecap="round" className="transition-all duration-500" />
                         </svg>
-                        {/* 아바타 */}
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm">
-                                <img
-                                    src={MOCK_PARTNER.avatar_url}
-                                    alt={MOCK_PARTNER.nickname}
-                                    className={`w-full h-full object-cover transition-all duration-700 ${isRevealed ? 'blur-0' : 'blur-[8px]'
-                                        }`}
-                                />
+                            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm bg-secondary-200 relative">
+                                <div className={`w-full h-full bg-primary-200 flex items-center justify-center transition-all duration-700 ${revealLevel >= 3 ? 'blur-0' : 'blur-[8px]'}`}>
+                                    <span className="text-xl">👤</span>
+                                </div>
+                                {!isUnlocked && revealLevel < 3 && (
+                                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                        <span className="text-xs text-white pb-3">🔒</span>
+                                        {/* 자물쇠 아이콘 */}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
 
-                    {/* 정보 */}
                     <div className="flex-1">
-                        <h1 className="font-semibold text-foreground">
-                            {isRevealed ? MOCK_PARTNER.nickname : '익명의 독서가'}
+                        <h1 className="font-semibold text-foreground flex items-center gap-2">
+                            {revealLevel >= 1 ? (partner?.nickname || '상대방') : '익명의 독서가'}
+                            <span className="text-xs font-normal text-primary-500 px-2 py-0.5 bg-primary-50 rounded-full">
+                                {isUnlocked ? '🔓 전체 공개' : `${revealLevel * 25}% 공개`}
+                            </span>
                         </h1>
                         <p className="text-xs text-foreground/50">
-                            📖 {MOCK_BOOK.title}
+                            📖 {book?.title || '로딩 중...'}
                         </p>
                     </div>
 
-                    {/* 프로그레스 텍스트 */}
-                    <div className="text-right">
-                        {isRevealed ? (
-                            <span className="text-xs text-primary-500 font-medium">💕 프로필 공개!</span>
-                        ) : (
-                            <span className="text-xs text-foreground/50">{messageCount}/20 메시지</span>
-                        )}
-                    </div>
+                    {/* 해금 버튼 (미공개 상태일 때만) */}
+                    {!isUnlocked && revealLevel < 3 && (
+                        <button
+                            onClick={handleUnlock}
+                            className="px-3 py-1.5 bg-secondary-100 hover:bg-secondary-200 rounded-full text-xs font-medium text-foreground/80 flex items-center gap-1 transition-colors"
+                        >
+                            <span>🔓 5개로 즉시 공개</span>
+                        </button>
+                    )}
                 </div>
             </header>
 
             {/* 메시지 영역 */}
-            <div className="flex-1 overflow-y-auto px-4 py-6">
-                {/* 아이스브레이커 */}
-                {messages.length === 0 && (
-                    <div className="mb-8 p-6 bg-white rounded-2xl border border-secondary-200 text-center">
-                        <div className="text-3xl mb-3">📖</div>
+            <div className="flex-1 overflow-y-auto px-4 py-6" ref={listRef}>
+                {messages.length === 0 && partnerUnderline && (
+                    <div className="mb-8 p-6 bg-white rounded-2xl border border-secondary-200 text-center shadow-sm">
+                        <div className="text-3xl mb-3">💬</div>
                         <h3 className="font-serif font-semibold text-foreground mb-2">
-                            {MOCK_BOOK.title}
+                            {partner?.nickname || '상대방'}님의 밑줄
                         </h3>
-                        <p className="text-sm text-foreground/60 mb-4">
-                            같은 책을 선택한 인연이에요
-                        </p>
-                        <div className="p-4 bg-primary-50 rounded-xl">
-                            <p className="text-sm text-primary-700 font-medium">
-                                💬 {MOCK_BOOK.icebreaker}
+                        <div className="p-4 bg-primary-50 rounded-xl relative">
+                            <span className="absolute top-2 left-2 text-primary-300 text-2xl">❝</span>
+                            <p className="text-sm text-primary-800 font-medium relative z-10 px-4">
+                                {partnerUnderline}
                             </p>
+                            <span className="absolute bottom-2 right-2 text-primary-300 text-2xl">❞</span>
                         </div>
                     </div>
                 )}
 
-                {/* 메시지 리스트 */}
-                <div className="space-y-4">
-                    {messages.map((message) => {
-                        const isOwn = message.sender_id === MOCK_MY_ID;
-                        return (
-                            <div
-                                key={message.id}
-                                className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
-                            >
-                                <div className={`max-w-[75%] ${isOwn ? 'order-2' : ''}`}>
-                                    <div
-                                        className={`px-4 py-3 ${isOwn
-                                                ? 'message-own'
-                                                : 'message-other'
-                                            }`}
-                                    >
-                                        <p className="text-sm leading-relaxed">{message.content}</p>
-                                    </div>
-                                    <p className={`text-xs text-foreground/40 mt-1 ${isOwn ? 'text-right' : ''}`}>
-                                        {formatTime(message.created_at)}
-                                    </p>
-                                </div>
+                {messages.map((msg) => {
+                    const isOwn = msg.sender_id === myId;
+                    return (
+                        <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
+                            <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${isOwn ? 'bg-primary-500 text-white rounded-br-none' : 'bg-white border border-secondary-200 text-foreground rounded-bl-none'
+                                }`}>
+                                {msg.content}
                             </div>
-                        );
-                    })}
-                </div>
-                <div ref={messagesEndRef} />
+                        </div>
+                    );
+                })}
             </div>
 
-            {/* 입력 영역 */}
+            {/* 입력창 */}
             <div className="sticky bottom-0 bg-white border-t border-secondary-200 p-4">
                 <div className="flex items-center gap-3">
+                    <Link href="/store" className="p-2 text-foreground/40 hover:text-primary-500 transition-colors" title="스토어 가기">
+                        ⚡
+                    </Link>
                     <input
-                        type="text"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
@@ -220,9 +268,7 @@ export default function ChatRoomPage() {
                         disabled={!inputValue.trim()}
                         className="w-11 h-11 bg-primary-500 hover:bg-primary-600 disabled:bg-secondary-300 text-white rounded-full flex items-center justify-center transition-colors"
                     >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                        </svg>
+                        ➤
                     </button>
                 </div>
             </div>
