@@ -13,28 +13,31 @@ export interface SeedBook {
     question: string; // 밑줄 남기기 질문 (e.g. "이 책의 어떤 부분이 기대되나요?")
 }
 
+// 카테고리 데이터 상수
+export const BOOK_CATEGORIES: Record<BookCategory, { label: string; emoji: string }> = {
+    emotion: { label: '감정/공감', emoji: '💬' },
+    growth: { label: '성장/자아', emoji: '🌱' },
+    romance: { label: '사랑/관계', emoji: '💕' },
+    philosophy: { label: '인문/철학', emoji: '🤔' },
+    fantasy: { label: '상상/판타지', emoji: '🦄' },
+};
+
 // 카테고리 라벨 반환
 export function getCategoryLabel(category: BookCategory): string {
-    const labels: Record<string, string> = {
-        emotion: '감정/공감',
-        growth: '성장/자아',
-        romance: '사랑/관계',
-        fantasy: '상상/판타지', // Philosophy와 Fantasy 병합 또는 선택
-        philosophy: '인문/철학',
-    };
-    return labels[category] || category;
+    return BOOK_CATEGORIES[category]?.label || category;
 }
 
 // 카테고리 이모지 반환
 export function getCategoryEmoji(category: BookCategory): string {
-    const emojis: Record<string, string> = {
-        emotion: '💭',
-        growth: '🌱',
+    return BOOK_CATEGORIES[category]?.emoji || '📖';
+}
+emotion: '💭',
+    growth: '🌱',
         romance: '💕',
-        fantasy: '✨',
-        philosophy: '📜',
+            fantasy: '✨',
+                philosophy: '📜',
     };
-    return emojis[category] || '📖';
+return emojis[category] || '📖';
 }
 
 export const THIS_MONTH_BOOKS: SeedBook[] = [

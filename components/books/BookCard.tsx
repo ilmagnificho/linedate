@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Book, BOOK_CATEGORIES } from '@/types/database';
+import { Book } from '@/types/database';
+import { BOOK_CATEGORIES } from '@/lib/books';
 
 interface BookCardProps {
     book: Book;
