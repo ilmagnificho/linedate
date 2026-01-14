@@ -77,8 +77,8 @@ export default function SelectPage() {
                     </p>
                 </div>
 
-                {/* 책 그리드 */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {/* 책 그리드 (모바일 최적화: 2열 고정) */}
+                <div className="grid grid-cols-2 gap-x-4 gap-y-6">
                     {filteredBooks.map((book) => (
                         <Link
                             key={book.id}
