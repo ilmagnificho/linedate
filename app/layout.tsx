@@ -46,10 +46,12 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${notoSerif.variable} antialiased`}
+        className={`${notoSerif.variable} antialiased bg-gray-100 flex justify-center`}
       >
-        {children}
-        <BottomNav />
+        <div className="w-full max-w-[450px] min-h-screen bg-white shadow-2xl relative flex flex-col">
+          {children}
+          <BottomNav />
+        </div>
       </body>
     </html>
   );

@@ -221,16 +221,16 @@ export default function ChatRoomPage() {
             </header>
 
             {/* 메시지 영역 */}
-            <div className="flex-1 overflow-y-auto px-4 py-6" ref={listRef}>
+            <div className="flex-1 overflow-y-auto px-4 py-6 mb-20" ref={listRef}>
                 {messages.length === 0 && partnerUnderline && (
                     <div className="mb-8 p-6 bg-white rounded-2xl border border-secondary-200 text-center shadow-sm">
                         <div className="text-3xl mb-3">💬</div>
-                        <h3 className="font-serif font-semibold text-foreground mb-2">
+                        <h3 className="font-serif font-semibold text-gray-800 mb-2">
                             {partner?.nickname || '상대방'}님의 밑줄
                         </h3>
                         <div className="p-4 bg-primary-50 rounded-xl relative">
                             <span className="absolute top-2 left-2 text-primary-300 text-2xl">❝</span>
-                            <p className="text-sm text-primary-800 font-medium relative z-10 px-4">
+                            <p className="text-sm text-primary-900 font-medium relative z-10 px-4 leading-relaxed">
                                 {partnerUnderline}
                             </p>
                             <span className="absolute bottom-2 right-2 text-primary-300 text-2xl">❞</span>
@@ -242,7 +242,9 @@ export default function ChatRoomPage() {
                     const isOwn = msg.sender_id === myId;
                     return (
                         <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
-                            <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${isOwn ? 'bg-primary-500 text-white rounded-br-none' : 'bg-white border border-secondary-200 text-foreground rounded-bl-none'
+                            <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${isOwn
+                                    ? 'bg-primary-600 text-white rounded-br-none'
+                                    : 'bg-white border border-secondary-200 text-gray-800 rounded-bl-none'
                                 }`}>
                                 {msg.content}
                             </div>
@@ -251,8 +253,8 @@ export default function ChatRoomPage() {
                 })}
             </div>
 
-            {/* 입력창 */}
-            <div className="sticky bottom-0 bg-white border-t border-secondary-200 p-4">
+            {/* 입력창 (Bottom Nav 위에 고정) */}
+            <div className="absolute bottom-[60px] left-0 w-full bg-white border-t border-secondary-200 p-3 z-20">
                 <div className="flex items-center gap-3">
                     <Link href="/store" className="p-2 text-foreground/40 hover:text-primary-500 transition-colors" title="스토어 가기">
                         ⚡
