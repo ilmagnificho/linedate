@@ -2,21 +2,23 @@
 
 import { createClient } from '@/lib/supabase/server';
 
-export async function checkMatchStatus(myUnderlineId: string) {
+export async function checkMatchStatus(myUnderlineId?: string) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) return { status: 'error', message: 'Unauthorized' };
 
-    // 1. 내 밑줄 정보 가져오기
-    const { data: myUnderline } = await supabase
-        .from('underlines')
-        .select('*')
-        .eq('id', myUnderlineId) // ID로 조회하거나 (인자가 ID일 경우)
-        // 또는 가장 최근 밑줄
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+    let myUnderline = null;
+
+    // 1. 내 밑줄 정보 가져오기 (ID가 있을 경우)
+    if (myUnderlineId) {
+        const { data } = await supabase
+            .from('underlines')
+            .select('*')
+            .eq('id', myUnderlineId)
+            .single();
+        myUnderline = data;
+    }
 
     if (!myUnderline) {
         // 인자가 없거나 조회가 안되면 가장 최근 것 조회
