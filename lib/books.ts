@@ -31,14 +31,6 @@ export function getCategoryLabel(category: BookCategory): string {
 export function getCategoryEmoji(category: BookCategory): string {
     return BOOK_CATEGORIES[category]?.emoji || '📖';
 }
-emotion: '💭',
-    growth: '🌱',
-        romance: '💕',
-            fantasy: '✨',
-                philosophy: '📜',
-    };
-return emojis[category] || '📖';
-}
 
 export const THIS_MONTH_BOOKS: SeedBook[] = [
     // ========== 감정/공감 (emotion) ==========
@@ -91,7 +83,7 @@ export const THIS_MONTH_BOOKS: SeedBook[] = [
         description: '자유롭고 행복한 삶을 위한 아들러 심리학',
         genre: '인문',
         category: 'growth',
-        cover_url: '/books/courage.jpg', // need proxy or placeholder logic if image missing
+        cover_url: '/books/courage.jpg',
         question: '남들의 시선에서 자유로워졌던 순간이 있나요?',
     },
     {
