@@ -115,6 +115,7 @@ export default function ChatRoomPage() {
                 table: 'messages',
                 filter: `room_id=eq.${roomId}`
             }, (payload) => {
+                console.log('Realtime INSERT payload:', payload);
                 setMessages((prev) => [...prev, payload.new]);
             })
             .on('postgres_changes', {

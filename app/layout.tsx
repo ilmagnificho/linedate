@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Serif_KR } from "next/font/google";
 import "./globals.css";
+import BottomNav from "@/components/layout/BottomNav";
 
 // Noto Serif KR (Google Fonts)
 const notoSerif = Noto_Serif_KR({
@@ -48,6 +49,7 @@ export default function RootLayout({
         className={`${notoSerif.variable} antialiased`}
       >
         {children}
+        <BottomNav />
       </body>
     </html>
   );

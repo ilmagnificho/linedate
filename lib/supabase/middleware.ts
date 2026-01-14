@@ -41,7 +41,7 @@ export async function updateSession(request: NextRequest) {
     }
 
     // 보호된 경로 접근 시 로그인되어 있지 않으면 /login으로 리다이렉트
-    const protectedPaths = ['/select', '/chat', '/waiting', '/onboarding'];
+    const protectedPaths = ['/select', '/chat', '/waiting', '/onboarding', '/store', '/profile'];
     const isProtected = protectedPaths.some((path) =>
         request.nextUrl.pathname.startsWith(path)
     );
