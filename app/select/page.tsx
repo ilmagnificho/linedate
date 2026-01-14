@@ -28,7 +28,12 @@ export default function SelectPage() {
                         <span className="text-xl">📖</span>
                         <span className="font-serif font-semibold text-foreground">Linedate</span>
                     </Link>
-                    <span className="text-sm font-medium text-foreground/50 bg-secondary-100 px-3 py-1 rounded-full">{getCurrentMonth()}</span>
+                    <div className="flex items-center gap-3">
+                        <span className="text-sm font-medium text-foreground/50 bg-secondary-100 px-3 py-1 rounded-full hidden md:inline">{getCurrentMonth()}</span>
+                        <Link href="/profile" className="text-sm font-medium text-primary-600 hover:text-primary-800 transition-colors px-3 py-1.5 rounded-full hover:bg-secondary-50">
+                            내 프로필
+                        </Link>
+                    </div>
                 </div>
 
                 {/* 카테고리 탭 (모바일 스크롤) */}
@@ -37,8 +42,8 @@ export default function SelectPage() {
                         <button
                             onClick={() => setActiveTab('all')}
                             className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'all'
-                                    ? 'bg-foreground text-white shadow-md'
-                                    : 'bg-white text-foreground/60 border border-secondary-200 hover:bg-secondary-50'
+                                ? 'bg-foreground text-white shadow-md'
+                                : 'bg-white text-foreground/60 border border-secondary-200 hover:bg-secondary-50'
                                 }`}
                         >
                             전체
@@ -48,8 +53,8 @@ export default function SelectPage() {
                                 key={cat}
                                 onClick={() => setActiveTab(cat)}
                                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === cat
-                                        ? 'bg-primary-500 text-white shadow-md'
-                                        : 'bg-white text-foreground/60 border border-secondary-200 hover:bg-primary-50 hover:text-primary-600'
+                                    ? 'bg-primary-500 text-white shadow-md'
+                                    : 'bg-white text-foreground/60 border border-secondary-200 hover:bg-primary-50 hover:text-primary-600'
                                     }`}
                             >
                                 <span>{getCategoryEmoji(cat)}</span>

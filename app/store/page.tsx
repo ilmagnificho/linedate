@@ -20,7 +20,7 @@ export default function StorePage() {
     }, []);
 
     const handlePurchase = async (amount: number) => {
-        if (!confirm(`${amount} 밑줄을 충전하시겠습니까? (테스트용 무료 충전)`)) return;
+        if (!confirm(`${amount} 밑줄을 충전하시겠습니까?\n(현재 시뮬레이션 모드로 실제 결제 없이 무료 충전됩니다.)`)) return;
 
         setLoading(true);
         // 실제 결제 로직 연결 부분 (PG사 SDK 등)
@@ -43,9 +43,14 @@ export default function StorePage() {
                 <Link href="/select" className="font-serif font-bold text-foreground">
                     Linedate
                 </Link>
-                <div className="flex items-center gap-2 px-3 py-1 bg-secondary-100 rounded-full text-sm font-medium text-foreground/80">
-                    <span>✐ 보유 밑줄:</span>
-                    <span className="text-primary-600 font-bold">{balance}개</span>
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 px-3 py-1 bg-secondary-100 rounded-full text-sm font-medium text-foreground/80">
+                        <span>✐ 보유 밑줄:</span>
+                        <span className="text-primary-600 font-bold">{balance}개</span>
+                    </div>
+                    <Link href="/profile" className="text-sm font-medium text-primary-600 hover:text-primary-800 transition-colors px-3 py-1.5 rounded-full hover:bg-secondary-50">
+                        내 프로필
+                    </Link>
                 </div>
             </header>
 
