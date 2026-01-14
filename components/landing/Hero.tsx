@@ -12,10 +12,14 @@ export default function Hero() {
                     <span className="font-serif font-bold text-xl text-foreground">Linedate</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Link href="/login" className="px-4 py-2 text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
+                    <Link href="/login" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#cb3d5d] transition-colors">
                         로그인
                     </Link>
-                    <Link href="/select" className="px-5 py-2.5 bg-primary-600 text-white text-sm font-bold rounded-full shadow-sm hover:bg-primary-700 transition-colors">
+                    <Link
+                        href="/select"
+                        className="px-5 py-2.5 text-white text-sm font-bold rounded-full shadow-sm transition-colors"
+                        style={{ backgroundColor: '#cb3d5d' }}
+                    >
                         시작하기
                     </Link>
                 </div>
@@ -56,8 +60,10 @@ export default function Hero() {
                 <div className="w-full flex flex-col gap-3 mt-4 mb-4">
                     <Link
                         href="/select"
-                        className="w-full bg-primary-500 text-white font-bold text-xl py-4 rounded-2xl shadow-lg shadow-primary-200 hover:bg-primary-600 hover:shadow-xl transition-all hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-2"
+                        className="w-full text-white font-bold text-xl py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-2"
+                        style={{ backgroundColor: '#df5f79', boxShadow: '0 10px 25px rgba(223, 95, 121, 0.3)' }}
                     >
+                        <span>📖</span>
                         <span>책으로 인연 시작하기</span>
                     </Link>
                     <div className="flex items-center justify-center gap-2 text-xs text-gray-400">

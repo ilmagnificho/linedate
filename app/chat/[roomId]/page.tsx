@@ -242,10 +242,11 @@ export default function ChatRoomPage() {
                     const isOwn = msg.sender_id === myId;
                     return (
                         <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
-                            <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${isOwn
-                                    ? 'bg-primary-500 text-white rounded-br-none'
-                                    : 'bg-white border border-secondary-200 text-gray-800 rounded-bl-none'
-                                }`}>
+                            <div
+                                className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${isOwn ? 'rounded-br-none' : 'border border-gray-200 rounded-bl-none'
+                                    }`}
+                                style={isOwn ? { backgroundColor: '#df5f79', color: 'white' } : { backgroundColor: 'white', color: '#374151' }}
+                            >
                                 {msg.content}
                             </div>
                         </div>

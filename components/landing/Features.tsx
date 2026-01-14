@@ -26,19 +26,21 @@ const features = [
 
 export default function Features() {
     return (
-        <section className="py-24 bg-white">
-            <div className="max-w-6xl mx-auto px-6">
+        <section className="py-12 bg-white">
+            <div className="max-w-md mx-auto px-6">
                 {/* 섹션 헤더 */}
-                <div className="text-center mb-16">
-                    <span className="inline-block px-4 py-2 bg-primary-50 text-primary-600 rounded-full text-sm font-medium mb-4">
+                <div className="text-center mb-8">
+                    <span
+                        className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4"
+                        style={{ backgroundColor: '#fdf4f5', color: '#cb3d5d' }}
+                    >
                         How it works
                     </span>
-                    <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-4">
-                        취향이 먼저, 얼굴은 나중에
+                    <h2 className="font-serif text-2xl font-bold text-gray-900 mb-3 break-keep">
+                        취향이 먼저,<br />얼굴은 나중에
                     </h2>
-                    <p className="text-foreground/60 max-w-xl mx-auto">
-                        Linedate는 진정성 있는 만남을 추구해요.
-                        <br />
+                    <p className="text-gray-500 text-sm leading-relaxed">
+                        Linedate는 진정성 있는 만남을 추구해요.<br />
                         책 한 권이 여는 새로운 인연을 경험하세요.
                     </p>
                 </div>
@@ -51,7 +53,10 @@ export default function Features() {
                             className="bg-white rounded-2xl p-5 border border-secondary-200 shadow-sm flex items-center gap-4"
                         >
                             {/* 아이콘 */}
-                            <div className="shrink-0 text-3xl p-2 bg-primary-50 rounded-full">
+                            <div
+                                className="shrink-0 text-2xl w-12 h-12 flex items-center justify-center rounded-xl"
+                                style={{ backgroundColor: '#fdf4f5' }}
+                            >
                                 {feature.icon}
                             </div>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { signIn, signUp } from '@/app/actions/auth';
 
 export default function LoginPage() {
@@ -33,16 +34,16 @@ export default function LoginPage() {
     return (
         <main className="min-h-screen bg-[#fefcfa] flex items-center justify-center px-4">
             <div className="w-full max-w-md">
-                {/* 로고 영역 */}
+                {/* 로고 영역 - 클릭 시 홈으로 */}
                 <div className="text-center mb-10">
-                    <div className="flex items-center justify-center gap-2 mb-4">
+                    <Link href="/" className="inline-flex items-center justify-center gap-2 mb-4 hover:opacity-80 transition-opacity">
                         <span className="text-3xl">📖</span>
-                        <span className="font-serif text-2xl font-bold text-foreground">Linedate</span>
-                    </div>
-                    <h1 className="font-serif text-3xl font-semibold mb-2 text-foreground">
+                        <span className="font-serif text-2xl font-bold text-gray-800">Linedate</span>
+                    </Link>
+                    <h1 className="font-serif text-3xl font-semibold mb-2 text-gray-900">
                         {isSignUp ? '첫 인연을 시작해볼까요?' : '다시 만나서 반가워요'}
                     </h1>
-                    <p className="text-foreground/60">
+                    <p className="text-gray-500">
                         {isSignUp
                             ? '책 취향으로 만나는 특별한 인연'
                             : '오늘도 밑줄 긋는 하루 되세요'}
@@ -94,7 +95,8 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full btn-primary py-4 text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
+                            className="w-full py-4 text-base text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50"
+                            style={{ backgroundColor: '#cb3d5d' }}
                         >
                             {loading ? '처리 중...' : (isSignUp ? '가입하기' : '로그인')}
                         </button>
